@@ -1,10 +1,15 @@
 class Oystercard
-  attr_reader :balance
+  attr_reader :balance, :entry_station, :exit_station, :journey_history
 
   MAX_LIMIT = 90
+  MIN_LIMIT = 1
 
   def initialize
     @balance = 0
+    @in_journey = false
+    @entry_station = nil
+    @exit_station = nil
+    @journey_history = []
   end
 
   def top_up(amount)
@@ -13,6 +18,25 @@ class Oystercard
     max_reached ? (raise error_message) : @balance += amount
   end
 
+  def touch_in(station)
+    fail("Error, insufficient balance") if @balance < MIN_LIMIT
+    @entry_station = station
+  end
+
+  def touch_out(exit_station)
+    @balance -= 1
+    @entry_station = nil
+    @exit_station = exit_station
+  end
+
+  def in_journey?
+    !@entry_station.nil?
+  end
+
+
+
+private
+
   def deduct(amount)
     if @balance - amount < 0
       raise("balance cannot be negative")
@@ -20,5 +44,6 @@ class Oystercard
       @balance -= amount
     end
   end
+
 
 end
