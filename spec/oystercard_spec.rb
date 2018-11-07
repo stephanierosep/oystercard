@@ -74,7 +74,7 @@ describe Oystercard do
       expect(oystercard.exit_station).to eq(exit)
     end
     it "will record the journey in an array of hashes called journey_history" do
-      expect(oystercard.journey_history.pop).to eq(entry_station: entry, exit_station: exit)
+      expect(oystercard.journey_history.pop).to eq({entry_station: entry, exit_station: exit})
     end
   end
 
