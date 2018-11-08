@@ -1,4 +1,5 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
 
@@ -35,7 +36,7 @@ describe Oystercard do
 
   it "returns #in_journey? as true after #touch_in" do
     oystercard.top_up(50)
-    oystercard.touch_in(station)
+    oystercard.touch_in("Barbican")
     expect(oystercard.in_journey?).to eq(true)
   end
 
@@ -43,7 +44,7 @@ describe Oystercard do
     oystercard.top_up(50)
     oystercard.touch_in(station)
     oystercard.touch_out(exit_station)
-    expect(oystercard.in_journey?).to eq(false)
+    expect(oystercard.journey_history.last.exit_station).to eq(exit_station)
   end
 
   it 'After touch_out, the balance should be reduced by 1' do
@@ -59,7 +60,7 @@ describe Oystercard do
   it "will remember the entry station" do
     oystercard.top_up(50)
     oystercard.touch_in(station)
-    expect(oystercard.entry_station).to eq(station)
+    expect(oystercard.journey_history.last.entry_station).to eq(station)
   end
 
   context("after completing a journey from entry to exit") do
@@ -70,14 +71,11 @@ describe Oystercard do
       oystercard.touch_in(entry)
       oystercard.touch_out(exit)
     end
-    it "will record exit_station" do
-      expect(oystercard.exit_station).to eq(exit)
-    end
-    it "will record the journey in an array of hashes called journey_history" do
-      expect(oystercard.journey_history.pop).to eq({entry_station: entry, exit_station: exit})
+
+    it "will record the journey in an array of journeys called journey_history" do
+      expect(oystercard.journey_history.last.entry_station).to eq(entry)
+      expect(oystercard.journey_history.last.exit_station).to eq(exit)
     end
   end
-
-
 
 end

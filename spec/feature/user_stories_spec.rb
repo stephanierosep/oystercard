@@ -57,7 +57,8 @@ describe "feature tests" do
     card = Oystercard.new
     card.top_up(50)
     card.touch_in(station)
-    expect(card.entry_station).to eq(station)
+    last_journey = card.journey_history.last
+    expect(last_journey.entry_station).to eq(station)
   end
 
   context("after completing a journey from entry to exit") do
@@ -70,15 +71,9 @@ describe "feature tests" do
       card.touch_out(exit)
     end
     it "will record exit_station" do
-      expect(card.exit_station).to eq(exit)
-    end
-    it "will record the journey in an array of hashes called journey_history" do
-      expect(card.journey_history.pop).to eq(entry_station: entry, exit_station: exit)
+    last_journey = card.journey_history.last
+      expect(last_journey.exit_station).to eq(exit)
     end
   end
-
-
-
-
 
 end
